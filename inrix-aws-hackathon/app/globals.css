@@ -20,13 +20,17 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.serif {
+  font-family: DM Serif Display;
+  font-size: 48px;
+  font-weight: 400;
+}
+
 .login_box{
   border-radius: 25px, 0px, 0px, 0px;
   width: 898px;
   height: 517px;
   position: relative;
-  left: -452px;
-  top: -1044px;
   gap: 0px;
   opacity: 1;
   background: #FFF1F1;
@@ -45,7 +49,7 @@ body {
   height: 179px;
   top: -965px;
   left: -266px;
-  border-radius: 25px, 0px, 0px, 0px;
+  border-radius: 15px, 15px, 15px, 15px;
 }
 
 .login-box button{
@@ -54,7 +58,7 @@ body {
   top: -742px;
   left: -119px;
   gap: 0px;
-  border-radius: 25px 0px 0px 0px;
+  border-radius: 15px 15px 15px 15px;
   opacity: 0px;
   background: #670606;
 }
@@ -89,7 +93,29 @@ body {
 
 .sidebar a:hover:not(.active){
   background-color: white;
-  color: white;
+  color: black;
+}
+
+.submenu{
+  display: block;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.submenu li{
+  margin-bottom: 5px;
+}
+
+.submenu li a{
+  padding: 8px;
+  background: #FFF1F1;
+  color:#990000;
+  border: 5px;
+}
+
+.submenu li a:hover{
+  background-color: white;
+  color: black;
 }
 .content{
   margin-left: -889px;
@@ -97,3 +123,14 @@ body {
   height: 1000px;
 }
 
+.user-profile{
+  position: absolute;
+  width: 79px;
+  height: 69px;
+  top: -196px;
+  left: 773px;
+  gap: 0px;
+  opacity: 0px;
+  cursor: pointer;
+  object-fit: cover; /*for user pfp*/
+}
