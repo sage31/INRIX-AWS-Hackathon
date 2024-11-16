@@ -19,3 +19,81 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.login_box{
+  border-radius: 25px, 0px, 0px, 0px;
+  width: 898px;
+  height: 517px;
+  position: relative;
+  left: -452px;
+  top: -1044px;
+  gap: 0px;
+  opacity: 1;
+  background: #FFF1F1;
+  align-items: center;
+  justify-content: center;
+}
+
+.login_box form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.login-box input{
+  width: 541px;
+  height: 179px;
+  top: -965px;
+  left: -266px;
+  border-radius: 25px, 0px, 0px, 0px;
+}
+
+.login-box button{
+  width: 255.59px;
+  height: 67px;
+  top: -742px;
+  left: -119px;
+  gap: 0px;
+  border-radius: 25px 0px 0px 0px;
+  opacity: 0px;
+  background: #670606;
+}
+
+.sidebar {
+  width: 330px;
+  height: 1048px;
+  top: 1026px;
+  left: -856px;
+  gap: 0px;
+  border-radius: 25px 0px 0px 0px;
+  opacity: 0px;
+  background: #FFF1F1;
+
+}
+
+.sidebar a{
+  display: block;
+  color: black;
+  padding: 20px;
+  font-size: 18px;
+}
+
+.sidebar a.active{
+  background-color: #990000;
+  color: white;
+}
+.sidebar a:hover{
+  background-color: #670606;
+  color: white;
+}
+
+.sidebar a:hover:not(.active){
+  background-color: white;
+  color: white;
+}
+.content{
+  margin-left: -889px;
+  padding: 20px;
+  height: 1000px;
+}
+
