@@ -16,6 +16,7 @@ interface Event {
   description: string;
   eventDate: string;
   location: string;
+  coverPhotoUrl: string;
   photos: Photo[];
   attendees: string[];
 }
@@ -40,7 +41,7 @@ export default async function ClubsPage(params : any ) {
     },
   });
   console.log(await groupResp.json());
-  
+
     return (
       <div className="flex min-h-screen">
         <div className="sidebar p-4 font-serif">

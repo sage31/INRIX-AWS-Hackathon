@@ -41,6 +41,7 @@ interface Event {
   eventDate: string;
   location: string;
   photos: Photo[];
+  coverPhotoUrl: string;
   attendees: string[];
 }
 
@@ -194,13 +195,14 @@ export default async function handler(
             });
 
           // Push a promise that resolves the photos for this event
-          const eventPromise = Promise.all(photoPromises).then((photos) => ({
+          const eventPromise = Promise.all(photoPromises).then(async (photos) => ({
             eventId: result.id,
             name: result.name,
             description: result.description,
             eventDate: result.date,
             location: result.location,
             photos,
+            coverPhotoUrl: await getPhotoUrl(result.coverPhotoId),
             attendees: result.user_names?.split(",") || [],
           }));
 
@@ -277,6 +279,20 @@ export default async function handler(
   });
 
   res.status(200).json({ message: "Hello from Next.js!" });
+}
+
+async function getPhotoUrl(photoId: number): Promise<string> {
+  const query = `SELECT photo_url FROM photos WHERE id = ${photoId};`;
+  return new Promise<string>((resolve, reject) => {
+    readPool.query(query, (err, results, fields) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+        return;
+      }
+      resolve(results[0].photo_url);
+    });
+  });
 }
 
 async function uploadPhotoToS3(
