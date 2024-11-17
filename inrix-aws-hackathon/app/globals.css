@@ -72,6 +72,32 @@ body {
   background: #670606;
 }
 
+.sign-up-box {
+  border-radius: 25px;
+  width: 700px;
+  height: 500px;
+  position: relative;
+  gap: 0px;
+  opacity: 1;
+  background: #FFF1F1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.sign-up-box-button{
+  width: 100%;
+  height: 50px;
+  gap: 0px;
+  border-radius: 15px;
+  opacity: 1px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background: #670606;
+}
+
 .sidebar {
   width: 330px;
   height: 750px;
@@ -202,4 +228,29 @@ body {
 
 .user-profile:hover {
   background-color: black; 
+}
+
+.event-upload-photo {
+  background-color: #FFF1F1;
+  padding: 16px;
+  border-radius: 15px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.event-upload-photo input[type="file"] {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #FFF1F1;
+  border: 1px solid #670606;
+  cursor: pointer;
+}
+
+.event-upload-photo input[type="file"]:hover {
+  background-color: #670606;
+  color: white;
 }

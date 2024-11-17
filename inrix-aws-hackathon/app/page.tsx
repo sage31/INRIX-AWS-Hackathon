@@ -1,49 +1,4 @@
-export function Login() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-serif">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1 className="text-7xl font-bold ">SCUnite</h1>
-        <p className="text-xl">Connecting Groups, One Photo at a Time.</p>
-
-        <div className="login_box flex items-center justify-center p-8">
-          <form className="flex flex-col gap-4 w-full max-w-sm">
-            <label htmlFor="email" className="text-sm font-medium text-red-900">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email"
-              required
-              className="login_box-input text-red-900"
-            />
-
-            <label htmlFor="password" className="text-sm font-medium text-red-900">
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Enter your password"
-              required
-              className="login_box-input text-red-900"
-            />
-
-            <button
-              type="submit"
-              className="login_box-button"
-            >
-              Login
-            </button>
-          </form>
-        </div>
-      </main>
-    </div>
-  );
-}
-
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -55,7 +10,9 @@ export default function Home() {
           <a href="#option2" className="submenu-link">SWE</a>
         </div>
         <a href="#upload" className="sidebar-link active mb-4">Other Clubs</a>
-        <a href="#profile" className="sidebar-link active">Logout</a>
+        <Link href="/login" className="sidebar-link active">
+          Login
+        </Link>
       </div>
 
       <div className="flex-1 p-4 font-serif flex flex-col items-center mt-8">
