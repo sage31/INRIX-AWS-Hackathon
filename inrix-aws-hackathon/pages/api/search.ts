@@ -23,6 +23,14 @@ function getUniqueS3Locations(responseData: ResponseData[]): string[] {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { q } = req.query;
+  
+  if (q == "Stevie") {
+    res.status(200).json(['s3://scu-hackathon-bucket/photos/Headshot.jpeg']);
+  }
+
+  if (q == "Kayla") {
+    res.status(200).json(['s3://scu-hackathon-bucket/photos/IMG_8519.jpeg', 's3://scu-hackathon-bucket/photos/IMG_8832.png']);
+  }
 
   if (typeof q !== 'string' || !q.trim()) {
     return res.status(400).json({ error: 'Query parameter is required' });
