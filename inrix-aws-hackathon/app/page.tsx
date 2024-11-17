@@ -49,13 +49,13 @@ export function Home() {
   return (
     <div className="flex">
       <div className="sidebar p-4 font-serif">
-        <a href="#home" className="sidebar-link active">My Clubs</a>
+        <a href="#myclubs" className="sidebar-link active">My Clubs</a>
         <div className="submenu p-4 font-serif">
           <a href="#option" className="submenu-link">ACM</a>
           <a href="#option2" className="submenu-link">SWE</a>
         </div>
-        <a href="#upload" className="sidebar-link active mb-4">Other Clubs</a>
-        <a href="#profile" className="sidebar-link active">Logout</a>
+        <a href="#otherclubs" className="sidebar-link active mb-4">Other Clubs</a>
+        <a href="#logout" className="sidebar-link active">Logout</a>
       </div>
 
       <div className="flex-1 p-4 font-serif flex flex-col items-center mt-8">
