@@ -205,7 +205,6 @@ export default async function handler(
             coverPhotoUrl: result.cover_photo_id ? await getPhotoUrl(result.cover_photo_id) : "",
             attendees: result.user_names?.split(",") || [],
           }));
-
           eventPromises.push(eventPromise);
         }
 

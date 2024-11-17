@@ -138,17 +138,6 @@ function toSqlDate(date: string): string {
   return new Date(date).toISOString().slice(0, 19).replace("T", " ");
 }
 
-export const config = {
-  // Specifies the maximum allowed duration for this function to execute (in seconds)
-  api: {
-    // Add file limit 10mb
-    bodyParser: {
-      sizeLimit: 1024 * 1024 * 15,
-    },
-  },
-  maxDuration: 10,
-};
-
 interface Photo {
   url: string;
   id: number;
