@@ -52,7 +52,7 @@ export const Home: React.FC<HomeProps> = ({ groups, allGroups }) => {
             <a href="#upload" className="sidebar-link active mb-4">
                Other Groups
             </a>
-            <div className="submenu p-4 font-serif">
+            <div key={"NotMyGroups"} className="submenu p-4 font-serif">
                {groups!.notMyGroups.map((group: Group) => (
                   <a href="#option" className="submenu-link">
                      <img

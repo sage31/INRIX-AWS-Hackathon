@@ -22,7 +22,6 @@ const readPool = createPool({
 const s3 = new S3Client({ region: "us-west-2" });
 
 interface GetGroupRequest {
-  groupName: string;
   groupId: number;
 }
 
@@ -120,12 +119,13 @@ export default async function handler(
 
   if (req.method === "GET") {
     // Get the entire group.
-    const group: GetGroupRequest = req.body;
+    const groupId = req.query.groupId as string;
     const groupResponse = {} as GetGroupResponse;
 
-    const filterCondition = group.groupId
-      ? `g.id = '${group.groupId}' `
-      : `g.name = '${group.groupName}'`;
+    // const filterCondition = group.groupId
+    //   ? `g.id = '${group.groupId}' `
+    //   : `g.name = '${group.groupName}'`;
+    const filterCondition = `g.id = '${groupId}'`;
     const groupQuery = `SELECT g.*, u.name as user_name FROM user_groups g
      left join group_members gm on g.id = gm.group_id
      left join users u on gm.user_id = u.id
@@ -138,6 +138,7 @@ export default async function handler(
           releaseConns(dbWrite, dbRead);
           reject();
         }
+        console.log("RESULTS" + results);
         groupResponse.groupId = results[0].id;
         groupResponse.name = results[0].name;
         groupResponse.description = results[0].description;
@@ -161,7 +162,7 @@ export default async function handler(
     left JOIN 
         users u ON ea.user_id = u.id
     WHERE 
-        e.group_id = ${group.groupId}
+        e.group_id = ${groupId}
     GROUP BY 
         e.id;
     `;
@@ -218,7 +219,8 @@ export default async function handler(
   }
   if (req.method === "POST") {
     // Process a create group  request
-    const group: CreateGroupRequest = req.body;
+    const group: CreateGroupRequest = JSON.parse(req.body);
+    console.log("GROUP" + group);
     const photoUrl = await uploadPhotoToS3(group.photo, dbRead, dbWrite);
     const createGroupQuery = `INSERT INTO user_groups (name, description, photo_url) VALUES ('${group.name}', '${group.description}', '${photoUrl}' );`;
     dbWrite.query(createGroupQuery, (err, results, fields) => {

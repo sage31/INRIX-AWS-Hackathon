@@ -1,6 +1,45 @@
 import Link from 'next/link'
+import { cookies } from 'next/headers'
 
-export default function ClubsPage() {
+interface GetGroupResponse {
+  groupId: number;
+  name: string;
+  description: string;
+  groupPhotoUrl: string;
+  members: string[];
+  events: Event[];
+}
+
+interface Event {
+  eventId: number;
+  name: string;
+  description: string;
+  eventDate: string;
+  location: string;
+  photos: Photo[];
+  attendees: string[];
+}
+
+interface Photo {
+  photoId: number;
+  photoUrl: string;
+  metadata: PhotoMetadata;
+}
+
+interface PhotoMetadata {
+  usersInPhoto: string[];
+}
+
+export default async function ClubsPage(params : any ) {
+  const cookieStore = await cookies();
+  const groupResp = await fetch(`http://localhost:3000/api/group?groupId=${(await params.params).id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `accessToken=${cookieStore.get("accessToken")!.value}`,
+    },
+  });
+  console.log(await groupResp.json());
   
     return (
       <div className="flex min-h-screen">
@@ -35,16 +74,16 @@ export default function ClubsPage() {
   
           <div className="photo-container mt-8">
             <div className="photo-card">
-              <img src="path_to_image1.jpg" alt="Description of photo 1" />
+              <img src="https://scu-hackathon-bucket.s3.us-west-2.amazonaws.com/photos/23" alt="Description of photo 1" />
             </div>
             <div className="photo-card">
-              <img src="path_to_image2.jpg" alt="Description of photo 2" />
+              <img src="https://scu-hackathon-bucket.s3.us-west-2.amazonaws.com/photos/23" alt="Description of photo 2" />
             </div>
             <div className="photo-card">
-              <img src="path_to_image3.jpg" alt="Description of photo 3" />
+              <img src="https://scu-hackathon-bucket.s3.us-west-2.amazonaws.com/photos/23" alt="Description of photo 3" />
             </div>
           </div>
-        </div>
+        </div>  
       </div>
     );
   }

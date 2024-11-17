@@ -5,7 +5,6 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   // Check if the authentication token exists in cookies
   const accessToken = request.cookies.get("accessToken")?.value;
-  console.log("Middleware");
   // check expiration of token
   if (accessToken) {
     console.log("Request contained accessToken, user is authenticated.");
