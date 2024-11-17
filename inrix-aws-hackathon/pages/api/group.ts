@@ -202,7 +202,7 @@ export default async function handler(
             eventDate: result.date,
             location: result.location,
             photos,
-            coverPhotoUrl: await getPhotoUrl(result.coverPhotoId),
+            coverPhotoUrl: result.cover_photo_id ? await getPhotoUrl(result.cover_photo_id) : "",
             attendees: result.user_names?.split(",") || [],
           }));
 
