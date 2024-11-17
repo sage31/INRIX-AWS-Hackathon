@@ -170,6 +170,14 @@ async function uploadPhotoToS3(
   return { url, id };
 }
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "10mb",
+    },
+  },
+}
+
 async function getNextPhotoId(dbRead: PoolConnection): Promise<number> {
   const query = "SELECT MAX(id) as max_photo_id FROM photos";
   return new Promise<number>((resolve, reject) => {
