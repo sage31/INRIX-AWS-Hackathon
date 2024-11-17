@@ -114,6 +114,7 @@ body {
   display: block;
   padding-left: 20px;
   margin-top: 10px;
+  margin-bottom: 10px;
   background: #F2B6B6;
   border-radius: 25px;
 }
@@ -183,4 +184,22 @@ body {
   transition: 0.2s;
   flex: 1 1 calc(33.33% - 1rem); /* Distribute cards evenly in a row */
   max-width: calc(33.33% - 1rem); /* Limit maximum width */
+}
+
+.user-profile {
+  position: absolute;
+  top: 16px;   
+  right: 16px;  
+  background-color: #670606; 
+  color: white;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.user-profile:hover {
+  background-color: black; 
 }

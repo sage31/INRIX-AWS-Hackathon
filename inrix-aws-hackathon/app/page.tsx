@@ -1,9 +1,8 @@
-
 export function Login() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-serif">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1 className="text-4xl font-bold ">SCUnite</h1>
+        <h1 className="text-7xl font-bold ">SCUnite</h1>
         <p className="text-xl">Connecting Groups, One Photo at a Time.</p>
 
         <div className="login_box flex items-center justify-center p-8">
@@ -55,14 +54,14 @@ export default function Home() {
           <a href="#option" className="submenu-link">ACM</a>
           <a href="#option2" className="submenu-link">SWE</a>
         </div>
-        <a href="#upload" className="sidebar-link">Upload Photos</a>
-        <a href="#profile" className="sidebar-link">Profile</a>
+        <a href="#upload" className="sidebar-link active mb-4">Other Clubs</a>
+        <a href="#profile" className="sidebar-link active">Logout</a>
       </div>
 
       <div className="flex-1 p-4 font-serif flex flex-col items-center mt-8">
         <header className="mb-4 text-center">
-          <h1 className="text-4xl font-bold">SCUnite</h1>
-          <button className="user-profile mt-4">Profile</button>
+          <h1 className="text-6xl font-bold">SCUnite</h1>
+          <button className="user-profile absolute top-4 right-4">Profile</button>
         </header>
         
         <div className="search-bar my-4 font-serif flex justify-center w-full">
@@ -94,7 +93,7 @@ export default function Home() {
               <h2 className = "text-m font-semibold text-red-900">ITW</h2>
             </div>
             </div>
-        </div>
       </div>
+    </div>
   );
 }
