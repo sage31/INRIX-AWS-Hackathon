@@ -94,9 +94,9 @@ export default async function handler(
       nextPhotoId++;
     }
     const uploadedPhotos = await Promise.all(photoUploads);
-    const coverPhotoId: number | null = null;
+    let coverPhotoId: number | null = null;
     if(body.coverPhoto) {
-      body.coverPhoto = uploadedPhotos[0].url;
+      coverPhotoId = uploadedPhotos[0].id;
       uploadedPhotos.splice(0, 1);
     }
     const photoIds = uploadedPhotos.map((photo) => photo.id);

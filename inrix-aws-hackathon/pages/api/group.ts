@@ -201,7 +201,7 @@ export default async function handler(
             eventDate: result.date,
             location: result.location,
             photos,
-            attendees: result.user_names.split(","),
+            attendees: result.user_names?.split(",") || [],
           }));
 
           eventPromises.push(eventPromise);

@@ -118,6 +118,21 @@ function main() {
       console.log("Table created");
     }
   );
+  connection.query(
+    "Create table if not exists scrapbooks (id int auto_increment primary key, user_id int);",
+    function (err, result) {
+      if (err) throw err;
+      console.log("Table created");
+    }
+  )
+
+  connection.query(
+    "Create table if not exists scrapbook_photos (id int auto_increment primary key, scrapbook_id int, slide_number int, photo_id int);",
+    function (err, result) {
+      if (err) throw err;
+      console.log("Table created");
+    }
+  )
 
   connection.end();
 }
@@ -153,5 +168,5 @@ function deleteDB() {
   });
 }
 
-await deleteDB();
+// await deleteDB();
 main();

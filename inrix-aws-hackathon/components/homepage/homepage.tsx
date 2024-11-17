@@ -60,7 +60,7 @@ export const Home: React.FC<HomeProps> = ({ groups, allGroups }) => {
             {isMyDropdownOpen &&
             <div key={"myGroups"} className="submenu p-4 font-serif">
                {groups!.myGroups.map((group: Group) => (
-                  <a href="#option" className="submenu-link">
+                  <a href={`/group/${group.id}`} className="submenu-link">
                      <img
                         src={group.groupPhotoUrl}
                         alt={group.name}
@@ -80,7 +80,7 @@ export const Home: React.FC<HomeProps> = ({ groups, allGroups }) => {
             {isOtherDropdownOpen &&
             <div key={"NotMyGroups"} className="submenu p-4 font-serif">
                {groups!.notMyGroups.map((group: Group) => (
-                  <a href="#option" className="submenu-link">
+                  <a href={`/group/${group.id}`} className="submenu-link">
                      <img
                         src={group.groupPhotoUrl}
                         alt={group.name}
