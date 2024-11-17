@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function ProfilePage() {
     return (
       <div className="flex min-h-screen">
@@ -22,8 +24,9 @@ export default function ProfilePage() {
               className="w-full max-w-xl p-2 rounded-lg border text-red-900"
             />
           </div>
-  
-          <button className="homep-button absolute top-4 right-4">SCUnite</button>
+          <Link href="/">
+          <button className="homep-button absolute top-4 right-4">Scrapbook</button>
+          </Link>
   
           <div className="photo-container mt-8">
             <div className="photo-card">
