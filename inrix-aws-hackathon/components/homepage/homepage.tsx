@@ -34,35 +34,62 @@ export const Home: React.FC<HomeProps> = ({ groups, allGroups }) => {
    const closePopup = () => {
       setShowPopup(false);
    };
+
+   const [isOtherDropdownOpen, setIsOtherDropdownOpen] = useState(false);
+
+   const [isMyDropdownOpen, setIsMyDropdownOpen] = useState(false);
+
+  // Function to toggle the dropdown
+  const toggleOtherDropdown = () => {
+    setIsOtherDropdownOpen(!isOtherDropdownOpen);
+  };
+
+  const toggleMyDropdown = () => {
+   setIsMyDropdownOpen(!isMyDropdownOpen);
+ };
+
    return (
       <div className="flex">
          <div className="sidebar p-4 font-serif">
-            <Link href="/club" className="sidebar-link active">
+         <button
+               onClick={toggleMyDropdown} className="sidebar-link active mb-4">
                My Groups
-            </Link>
-
-            <div className="submenu p-4 font-serif">
+               <span className={`transform transition-transform ${isMyDropdownOpen ? ' rotate-180' :  ''}`}>
+               </span>
+            </button>
+            {isMyDropdownOpen &&
+            <div key={"myGroups"} className="submenu p-4 font-serif">
                {groups!.myGroups.map((group: Group) => (
                   <a href="#option" className="submenu-link">
+                     <img
+                        src={group.groupPhotoUrl}
+                        alt={group.name}
+                        className="submenu-item-img"/>
                      {group.name}
                   </a>
                ))}
             </div>
+            }
 
-            <a href="#upload" className="sidebar-link active mb-4">
+            <button
+               onClick={toggleOtherDropdown} className="sidebar-link active mb-4">
                Other Groups
-            </a>
+               <span className={`transform transition-transform ${isOtherDropdownOpen ? ' rotate-180' :  ''}`}>
+               </span>
+            </button>
+            {isOtherDropdownOpen &&
             <div key={"NotMyGroups"} className="submenu p-4 font-serif">
                {groups!.notMyGroups.map((group: Group) => (
                   <a href="#option" className="submenu-link">
                      <img
                         src={group.groupPhotoUrl}
                         alt={group.name}
-                        className="submenu-item img"/>
+                        className="submenu-item-img"/>
                      {group.name}
                   </a>
                ))}
             </div>
+            }
             <button
                onClick={addClubPopup}
                className="sidebar-link active mb-4">Add Club</button>

@@ -101,7 +101,7 @@ body {
 
 .sidebar {
   width: 330px;
-  height: 750px;
+  height: 100%;
   top: 1026px;
   left: -856px;
   gap: 0px;
@@ -145,6 +145,7 @@ body {
 
 .submenu{
   display: block;
+  height: 100%;
   padding-left: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -153,6 +154,8 @@ body {
 }
 
 .submenu-link{
+  display:flex;
+  align-items: center;
   margin-bottom: 5px;
 }
 
@@ -168,10 +171,11 @@ body {
   color: black;
 }
 
-.submenu-item img{
-  width: 30px;
-  height: 30px;
-  margin-right: 15px;
+.submenu-item-img{
+  width: 40px;
+  height: 40px;
+  float: right;
+  margin-bottom: -20px;
 }
 
 .content{
