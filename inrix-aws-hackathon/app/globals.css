@@ -114,25 +114,31 @@ body {
 
 }
 
-.sidebar a{
+.sidebar a,
+.sidebar button{
   display: block;
   color: black;
   padding: 20px;
   font-size: 18px;
+  width: 100%;
+  text-align: left;
 }
 
-.sidebar a.active{
+.sidebar a.active,
+.sidebar button.active{
   background-color: #990000;
   color: white;
   border-radius: 25px;
 }
-.sidebar a:hover{
+.sidebar a:hover,
+.sidebar button.hover{
   background-color: #670606;
   color: white;
   border-radius: 25px;
 }
 
-.sidebar a:hover:not(.active){
+.sidebar a:hover:not(.active),
+.sidebar button:hover:not(.active){
   background-color: white;
   color: black;
 }
