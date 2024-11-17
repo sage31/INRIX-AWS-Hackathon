@@ -121,6 +121,11 @@ body {
   font-size: 18px;
 }
 
+h1 {
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
 .sidebar a.active{
   background-color: #990000;
   color: white;

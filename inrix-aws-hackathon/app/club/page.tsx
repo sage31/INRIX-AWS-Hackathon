@@ -37,7 +37,7 @@ export default function Home() {
         </div>
   
     <div style={{ padding: "2rem" }}>
-      <h1>SCU Photo Gallery</h1>
+      <h1 className='serif' >SCU Photo Gallery</h1>
 
       {/* Search Bar */}
       <SearchBar onSearch={handleSearch} />
