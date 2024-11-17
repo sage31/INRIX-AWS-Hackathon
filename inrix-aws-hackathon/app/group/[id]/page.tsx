@@ -18,6 +18,7 @@ interface Event {
   description: string;
   eventDate: string;
   location: string;
+  coverPhotoUrl: string;
   photos: Photo[];
   attendees: string[];
 }

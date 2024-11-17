@@ -134,6 +134,14 @@ function main() {
     }
   )
 
+  connection.query(
+    "Create table if not exists scrapbook_captions (id int auto_increment primary key, scrapbook_id int, slide_number int, caption varchar(255));",
+    function (err, result) {
+      if (err) throw err;
+      console.log("Table created");
+    }
+  )
+
   connection.end();
 }
 

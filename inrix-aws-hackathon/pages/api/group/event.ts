@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { createPool, PoolConnection } from "mysql";
 import next from "next";
+import { maxHeaderSize } from "http";
 
 const writePool = createPool({
   host: process.env.MYSQL_WRITE_HOST,
@@ -139,7 +140,13 @@ function toSqlDate(date: string): string {
 
 export const config = {
   // Specifies the maximum allowed duration for this function to execute (in seconds)
-  maxDuration: 5,
+  api: {
+    // Add file limit 10mb
+    bodyParser: {
+      sizeLimit: 1024 * 1024 * 15,
+    },
+  },
+  maxDuration: 10,
 };
 
 interface Photo {
