@@ -25,7 +25,7 @@ export default function Home() {
         <button
           onClick={addClubPopup}
           className="sidebar-link active mb-4">Add Club</button>
-        <Link href="/" className="sidebar-link active">
+        <Link href="/login" className="sidebar-link active">
           Login
         </Link>
       </div>
