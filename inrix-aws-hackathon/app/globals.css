@@ -231,6 +231,57 @@ body {
   background-color: black; 
 }
 
+.event-buttons {
+  margin-top: 20px;
+}
+
+.event-button {
+  display: block;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #FFF1F1;
+  color: #990000;
+  border-radius: 15px;
+  text-decoration: none;
+}
+
+.event-button:hover {
+  background-color: #670606;
+  color: white;
+}
+
+.photo-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.photo-card {
+  width: 100%;
+  max-width: 250px;
+  padding: 1rem;
+  background: #FFF1F1;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.photo-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.photo-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
 .event-upload-photo {
   background-color: #FFF1F1;
   padding: 16px;
@@ -247,11 +298,43 @@ body {
   padding: 10px;
   border-radius: 8px;
   background-color: #FFF1F1;
-  border: 1px solid #670606;
+  border: 1px solid #FFF1F1;
   cursor: pointer;
 }
 
 .event-upload-photo input[type="file"]:hover {
   background-color: #670606;
   color: white;
+}
+
+.home-button {
+  position: absolute;
+  top: 16px;
+  right: 120px;
+  background-color: #670606; 
+  color: white;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.home-button:hover {
+  background-color: black;
+}
+
+.homep-button {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: #670606; 
+  color: white;
+  border-radius: 25px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s;
 }

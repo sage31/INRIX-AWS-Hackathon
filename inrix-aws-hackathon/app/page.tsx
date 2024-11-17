@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="flex">
       <div className="sidebar p-4 font-serif">
-        <a href="#home" className="sidebar-link active">My Clubs</a>
+        <a href="#myclubs" className="sidebar-link active">My Clubs</a>
         <div className="submenu p-4 font-serif">
           <a href="#option" className="submenu-link">ACM</a>
           <a href="#option2" className="submenu-link">SWE</a>
