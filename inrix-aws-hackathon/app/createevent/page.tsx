@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-export default function CreateEvent() {
+export default function CreateEvent() { //correct createEvent
    return (
      <div className="flex flex-col items-center">
        <div className="flex-1 p-4 font-serif flex flex-col items-center mt-8">
