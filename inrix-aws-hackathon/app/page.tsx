@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="flex">
       <div className="sidebar p-4 font-serif">
-        <a href="#myclubs" className="sidebar-link active">My Clubs</a>
+        <Link href="/club" className="sidebar-link active">My Clubs</Link>
         <div className="submenu p-4 font-serif">
           <a href="#option" className="submenu-link">ACM</a>
           <a href="#option2" className="submenu-link">SWE</a>
@@ -17,8 +17,10 @@ export default function Home() {
 
       <div className="flex-1 p-4 font-serif flex flex-col items-center mt-8">
         <header className="mb-4 text-center">
-          <h1 className="text-6xl font-bold">SCUnite</h1>
+          <h1 className="text-6xl font-bold">Scrapbook</h1>
+          <Link href="/profile">
           <button className="user-profile absolute top-4 right-4">Profile</button>
+          </Link>
         </header>
         
         <div className="search-bar my-4 font-serif flex justify-center w-full">

@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function EventPage() {
     return (
       <div className="flex min-h-screen">
@@ -15,8 +17,12 @@ export default function EventPage() {
           <header className="mb-4 text-center">
             <h2 className="text-4xl font-bold text-white-900 font-serif">[Club Name]</h2>
             <h3 className="text-2xl font-semibold text-white-700 mt-2">[Event Title]</h3>
+            <Link href="/profile">
             <button className="user-profile absolute top-4 right-4">Profile</button>
-            <button className="home-button absolute top-4 right-4">SCUnite</button>
+            </Link>
+            <Link href="/">
+            <button className="home-button absolute top-4 right-4">Scrapbook</button>
+            </Link>
           </header>
   
           <div className="search-bar my-4 font-serif flex justify-center w-full">
