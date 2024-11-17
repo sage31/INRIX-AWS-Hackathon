@@ -73,7 +73,28 @@ export default function Home() {
           />
         </div>
 
+        <div className= "cards mt-8 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center">
+            <div className="club-cards p-4 bg-white rounded-md shadlow-lg cursor-pointer">
+              <h2 className = "text-m font-semibold text-red-900">ACM</h2>
+            </div>
+
+            <div className="club-cards p-4 bg-white rounded-md shadlow-lg cursor-pointer">
+              <h2 className = "text-m font-semibold text-red-900">SWE</h2>
+            </div>
+
+            <div className="club-cards p-4 bg-white rounded-md shadlow-lg cursor-pointer">
+              <h2 className = "text-m font-semibold text-red-900">ACM-W</h2>
+            </div>
+
+            <div className="club-cards p-4 bg-white rounded-md shadlow-lg cursor-pointer">
+              <h2 className = "text-m font-semibold text-red-900">SHPE</h2>
+            </div>
+
+            <div className="club-cards p-4 bg-white rounded-md shadlow-lg cursor-pointer">
+              <h2 className = "text-m font-semibold text-red-900">ITW</h2>
+            </div>
+            </div>
+        </div>
       </div>
-    </div>
   );
 }
