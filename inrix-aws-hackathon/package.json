@@ -9,6 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.693.0",
+    "@aws-sdk/client-s3": "^3.693.0",
+    "amazon-cognito-identity-js": "^6.3.12",
+    "dotenv": "^16.4.5",
     "mysql": "^2.18.1",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
