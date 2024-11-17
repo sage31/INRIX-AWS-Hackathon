@@ -7,17 +7,14 @@ import {
 } from "amazon-cognito-identity-js";
 import { NextApiRequest, NextApiResponse } from "next";
 
+import { File, IncomingForm } from "formidable";
+
 const cognitoPoolData: ICognitoUserPoolData = {
   UserPoolId: process.env.COGNITO_USER_POOL_ID as string, // Your User Pool ID
   ClientId: process.env.COGNITO_CLIENT_ID as string, // Your App Client ID
 };
 
 const userPool = new CognitoUserPool(cognitoPoolData);
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
 
 interface ResponseData {
   message: string;
@@ -28,18 +25,28 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   if (req.method === "POST") {
-    const body = req.body as LoginRequest;
-    const { email, password } = body;
-    const accessToken = await signIn(email, password);
-    res
-      .status(200)
-      .setHeader(
-        "Set-Cookie",
-        `accessToken=${accessToken}; HttpOnly; Secure; SameSite=None`
-      )
-      .json({ message: "Login successful" });
+    const form = new IncomingForm();
+
+    const [formFields, files] = await form.parse(req);
+    const accessToken = await signIn(
+      formFields.email![0],
+      formFields.password![0]
+    );
+    const oneHourFromNow = new Date(Date.now() + 60 * 60 * 1000).toUTCString();
+    res.setHeader("access-control-expose-headers", "Set-Cookie");
+    res.setHeader(
+      "Set-Cookie",
+      `accessToken=${accessToken}; Path=/; SameSite=Lax; Expires=${oneHourFromNow};`
+    );
+    res.redirect(303, "/");
   }
 }
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 function signIn(email: string, password: string) {
   return new Promise((resolve, reject) => {

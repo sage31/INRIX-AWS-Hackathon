@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 export default function ClubsPage() {
+  
     return (
       <div className="flex min-h-screen">
         <div className="sidebar p-4 font-serif">

@@ -6,17 +6,29 @@ import {
   AuthenticationDetails,
   ICognitoUserPoolData,
   CognitoUserAttribute,
-  CognitoUserSession,
-  ICognitoUserData,
   IAuthenticationDetailsData,
 } from "amazon-cognito-identity-js";
 import {
   AdminConfirmSignUpCommand,
   CognitoIdentityProviderClient,
+  GetGroupResponse,
 } from "@aws-sdk/client-cognito-identity-provider";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { File, IncomingForm } from "formidable";
+import { JwksClient } from "jwks-rsa";
+import fs from "fs";
+import {
+  JwtHeader,
+  JwtPayload,
+  SigningKeyCallback,
+  verify,
+} from "jsonwebtoken";
 
 const s3 = new S3Client({ region: "us-west-2" });
+const jwksClient = new JwksClient({
+  jwksUri:
+    "https://cognito-idp.us-west-2.amazonaws.com/us-west-2_H35dLt9ar/.well-known/jwks.json",
+});
 
 const writePool = createPool({
   host: process.env.MYSQL_WRITE_HOST,
@@ -46,7 +58,13 @@ const cognitoClient = new CognitoIdentityProviderClient({
 const userPool = new CognitoUserPool(cognitoPoolData);
 
 interface GetUserResponse {
-  groups: {
+  myGroups: {
+    id: string;
+    name: string;
+    description: string;
+    groupPhotoUrl: string;
+  }[];
+  notMyGroups: {
     id: string;
     name: string;
     description: string;
@@ -107,17 +125,27 @@ export default async function handler(
   });
 
   if (req.method === "GET") {
-    const userId = req.headers["user-id"];
+    const token = req.cookies.accessToken;
+    console.log("backend request");
+    if (!token) {
+      res.status(401).json({ message: "Unauthorized" });
+      releaseConns(dbWrite, dbRead);
+      return;
+    }
+    const userId = await verifyToken(token);
     const query = `SELECT g.id, g.name, g.description, g.photo_url FROM user_groups g 
     JOIN group_members gm on gm.group_id = g.id 
     WHERE gm.user_id = ${userId};`;
-
-    await new Promise((resolve, reject) => {
+    const notMyGroupsQuery = `SELECT g.id, g.name, g.description, g.photo_url FROM user_groups g
+    WHERE g.id NOT IN (SELECT gm.group_id FROM group_members gm WHERE gm.user_id = ${userId});`;
+    const resp = {} as GetUserResponse;
+    const getMyGroups = new Promise<void>((resolve, reject) => {
       dbRead.query(query, (err, results, fields) => {
         if (err) {
           console.log(err);
           res.status(500).json({ message: "Error getting user" });
           releaseConns(dbWrite, dbRead);
+          resolve();
           return;
         }
         const groups = results.map((group: any) => {
@@ -128,21 +156,42 @@ export default async function handler(
             groupPhotoUrl: group.photo_url,
           };
         });
-        res.status(200).json({ groups });
-        releaseConns(dbWrite, dbRead);
+        resp.myGroups = groups;
+        resolve();
       });
     });
+    const getNotMyGroups = new Promise<void>((resolve, reject) => {
+      dbRead.query(notMyGroupsQuery, (err, results, fields) => {
+        if (err) {
+          console.log(err);
+          res.status(500).json({ message: "Error getting user" });
+          releaseConns(dbWrite, dbRead);
+          resolve();
+          return;
+        }
+        const groups = results.map((group: any) => {
+          return {
+            id: group.id,
+            name: group.name,
+            description: group.description,
+            groupPhotoUrl: group.photo_url,
+          };
+        });
+        resp.notMyGroups = groups;
+        resolve();
+      });
+    });
+    await Promise.all([getMyGroups, getNotMyGroups]);
+    res.status(200).json(resp);
   }
   if (req.method === "POST") {
-    // Process a create user request
-    const createUserRequest = req.body as CreateUserRequest;
-    const userPhotoUrl = await uploadPhotoToS3(
-      createUserRequest.userPhoto,
-      dbRead,
-      dbWrite
-    );
+    const form = new IncomingForm();
 
-    const query = `INSERT INTO users (name, email, default_photo_url) VALUES ('${createUserRequest.name}', '${createUserRequest.email}', '${userPhotoUrl}');`;
+    const [formFields, files] = await form.parse(req);
+    const b64Photo = await getB64Image(files.photo![0]);
+    const userPhotoUrl = await uploadPhotoToS3(b64Photo, dbRead, dbWrite);
+
+    const query = `INSERT INTO users (name, email, default_photo_url) VALUES ('${formFields.name}', '${formFields.email}', '${userPhotoUrl}');`;
     await new Promise<void>((resolve, reject) => {
       dbWrite.query(query, async (err, results, fields) => {
         if (err) {
@@ -151,24 +200,31 @@ export default async function handler(
           releaseConns(dbWrite, dbRead);
           return;
         }
-        const accessToken = await signUp(
+        const { accessToken, accessTokenExpires } = await signUp(
           results.insertId,
-          createUserRequest.email,
-          createUserRequest.password
+          formFields.email![0],
+          formFields.password![0]
         );
+        const oneHourFromNow = new Date(
+          Date.now() + 60 * 60 * 1000
+        ).toUTCString();
+        res.setHeader("access-control-expose-headers", "Set-Cookie");
         res.setHeader(
           "Set-Cookie",
-          `accessToken=${accessToken}; HttpOnly; Secure; SameSite=None`
+          `accessToken=${accessToken}; Path=/; SameSite=Lax; Expires=${oneHourFromNow};`
         );
-        res.status(200).json({ userId: results.insertId });
+        res.redirect(303, "/");
         releaseConns(dbWrite, dbRead);
         resolve();
       });
     });
   }
   if (req.method === "PUT") {
+    const readable = req.read();
+    const buffer = Buffer.from(readable);
+    const data = JSON.parse(buffer.toString());
     // Process a update user request
-    const updateUserRequest = req.body as UpdateUserRequest;
+    const updateUserRequest = data as UpdateUserRequest;
     const userId = updateUserRequest.userId;
     const joinGroups = updateUserRequest.joinGroups || [];
     const leaveGroups = updateUserRequest.leaveGroups || [];
@@ -265,6 +321,9 @@ export default async function handler(
 
 export const config = {
   // Specifies the maximum allowed duration for this function to execute (in seconds)
+  api: {
+    bodyParser: false,
+  },
   maxDuration: 5,
 };
 
@@ -321,63 +380,120 @@ function releaseConns(dbWrite: PoolConnection, dbRead: PoolConnection) {
 }
 
 function signUp(userId: number, email: string, password: string) {
-  return new Promise((resolve, reject) => {
-    const attributeList: CognitoUserAttribute[] = [
-      new CognitoUserAttribute({
-        Name: "email",
-        Value: email,
-      }),
-      new CognitoUserAttribute({
-        Name: "custom:id",
-        Value: String(userId),
-      }),
-    ];
-    const validationData: CognitoUserAttribute[] = [];
-    userPool.signUp(
-      email,
-      password,
-      attributeList,
-      validationData,
-      async (err, result) => {
-        if (err) return reject(err);
-        if (result) {
-          const confirmSignUpCommand = new AdminConfirmSignUpCommand({
-            Username: email,
-            UserPoolId: process.env.COGNITO_USER_POOL_ID,
-          });
-          cognitoClient.send(confirmSignUpCommand);
-          resolve(await signIn(email, password));
+  return new Promise<{ accessToken: string; accessTokenExpires: string }>(
+    (resolve, reject) => {
+      const attributeList: CognitoUserAttribute[] = [
+        new CognitoUserAttribute({
+          Name: "email",
+          Value: email,
+        }),
+        new CognitoUserAttribute({
+          Name: "custom:id",
+          Value: String(userId),
+        }),
+      ];
+      const validationData: CognitoUserAttribute[] = [];
+      userPool.signUp(
+        email,
+        password,
+        attributeList,
+        validationData,
+        async (err, result) => {
+          if (err) return reject(err);
+          if (result) {
+            const confirmSignUpCommand = new AdminConfirmSignUpCommand({
+              Username: email,
+              UserPoolId: process.env.COGNITO_USER_POOL_ID,
+            });
+            cognitoClient.send(confirmSignUpCommand);
+            resolve(await signIn(email, password));
+          }
         }
-      }
-    );
-  });
+      );
+    }
+  );
 }
 
 function signIn(email: string, password: string) {
+  return new Promise<{ accessToken: string; accessTokenExpires: string }>(
+    (resolve, reject) => {
+      const authenticationData: IAuthenticationDetailsData = {
+        Username: email,
+        Password: password,
+      };
+
+      const authenticationDetails = new AuthenticationDetails(
+        authenticationData
+      );
+
+      const cognitoUser = new CognitoUser({
+        Username: email,
+        Pool: userPool,
+      });
+
+      cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: (result) => {
+          // Successful sign-in
+          const accessToken = result.getIdToken().getJwtToken();
+          const accessTokenExpires = new Date(
+            result.getIdToken().getExpiration()
+          ).toUTCString();
+          resolve({ accessToken, accessTokenExpires });
+        },
+        onFailure: (err) => {
+          // Handle error
+          console.error("Sign-in failed:", err);
+          reject(err);
+        },
+      });
+    }
+  );
+}
+
+async function getB64Image(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const filePath = file.filepath; // Get the file path
+
+    // Read the file and convert it to base64
+    fs.readFile(filePath, (err, data) => {
+      if (err) {
+        console.error("Error reading file:", err);
+        return;
+      }
+
+      // Convert the file to base64
+      const base64String = data.toString("base64");
+      resolve(base64String);
+    });
+  });
+}
+
+function getKey(header: JwtHeader, callback: SigningKeyCallback) {
+  jwksClient.getSigningKey(header.kid, (err, key) => {
+    if (err) {
+      return callback(err, undefined);
+    }
+    const signingKey = key?.getPublicKey();
+    callback(null, signingKey);
+  });
+}
+
+async function verifyToken(token: string) {
   return new Promise((resolve, reject) => {
-    const authenticationData: IAuthenticationDetailsData = {
-      Username: email,
-      Password: password,
-    };
-
-    const authenticationDetails = new AuthenticationDetails(authenticationData);
-
-    const cognitoUser = new CognitoUser({
-      Username: email,
-      Pool: userPool,
-    });
-
-    cognitoUser.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => {
-        // Successful sign-in
-        const accessToken = result.getIdToken().getJwtToken();
-        resolve(accessToken);
+    verify(
+      token,
+      getKey,
+      {
+        algorithms: ["RS256"], // Ensure the correct algorithm is used
       },
-      onFailure: (err) => {
-        // Handle error
-        console.error("Sign-in failed:", err);
-        reject(err);
-      },
-    });
+      (err, decoded) => {
+        if (err) {
+          console.log(err);
+          reject(err);
+        } else {
+          resolve((decoded as JwtPayload)["custom:id"]); // Decoded claims
+        }
+      }
+    );
   });
 }

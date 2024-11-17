@@ -13,12 +13,17 @@
     "@aws-sdk/client-s3": "^3.693.0",
     "amazon-cognito-identity-js": "^6.3.12",
     "dotenv": "^16.4.5",
+    "formidable": "^3.5.2",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.1.0",
     "mysql": "^2.18.1",
     "next": "15.0.3",
+    "nookies": "^2.5.2",
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106"
   },
   "devDependencies": {
+    "@types/formidable": "^3.4.5",
     "@types/mysql": "^2.15.26",
     "@types/node": "^20",
     "@types/react": "^18",
