@@ -26,6 +26,10 @@ const PhotoFeed: React.FC<PhotoFeedProps> = ({ s3Locations = [] }) => {
           .replace(/^https:\/\/([^/]+)\//, "https://$1.s3.us-west-2.amazonaws.com/"); // Add S3 region if needed
       };
       
+      function filterList(listA: string[], listB: string[]): string[] {
+        // Return items from listA that are not in listB
+        return listA.filter(item => !listB.includes(item));
+      }
       
       
       const fetchPhotos = async () => {
@@ -45,13 +49,18 @@ const PhotoFeed: React.FC<PhotoFeedProps> = ({ s3Locations = [] }) => {
           const normalizedLocations = s3Locations.map(normalizeS3Location);
 
           console.log("normalizedLocations:", normalizedLocations);
-      
+        //   const filter_urls = ["s3://scu-hackathon-bucket/photos/19", "s3://scu-hackathon-bucket/photos/20", "s3://scu-hackathon-bucket/photos/21", "s3://scu-hackathon-bucket/photos/22", "s3://scu-hackathon-bucket/photos/23", "s3://scu-hackathon-bucket/photos/24", "s3://scu-hackathon-bucket/photos/25"]
+        //   normalizedLocations = normalizedLocations.concat(filter_urls);
+
           // Filter photos based on normalized URLs
+          const filter_urls = ["https://scu-hackathon-bucket.s3.us-west-2.amazonaws.com/photos/19", "https://scu-hackathon-bucket.s3.us-west-2.amazonaws.com/photos/20", "https://scu-hackathon-bucket.s3.us-west-2.amazonaws.com/photos/21", "https://scu-hackathon-bucket.s3.us-west-2.amazonaws.com/photos/22", "s3://scu-hackathon-bucket/photos/23", "s3://scu-hackathon-bucket/photos/24", "s3://scu-hackathon-bucket/photos/25"]
           let filteredData = data;
+          console.log("urls", filteredData.map((photo) => photo.url));
           if (s3Locations.length > 0) {
-            filteredData = data.filter((photo) => normalizedLocations.includes(photo.url));
+            filteredData = data.filter((photo) => normalizedLocations.includes(photo.url) && !filter_urls.includes(photo.url));
+          } else {
+            filteredData = data.filter((photo) => !filter_urls.includes(photo.url));
           }
-          
       
           setPhotos((prev) => {
             const prevUrls = prev.map((p) => p.url).sort();

@@ -3,9 +3,10 @@ import Link from 'next/link';
 import PhotoFeed from '../components/PhotoFeed';
 import SearchBar from '../components/SearchBar';
 import { useState } from 'react';
+import FileUploadPopup from "../components/FileUploadPopup";
 
 export default function Home() {
-
+  const [showPopup, setShowPopup] = useState(false);
   const [filteredPhotos, setFilteredPhotos] = useState<string[]>([]); // Store filtered S3 locations
 
   const handleSearch = async (query: string) => {
@@ -37,7 +38,12 @@ export default function Home() {
         </div>
   
     <div style={{ padding: "2rem" }}>
-      <h1 className='serif' >SCU Photo Gallery</h1>
+      <h1 className='serif' >Scrapbook - SWE</h1>
+
+      <div style={{ textAlign: "center", marginTop: "50px" }}>
+        <button onClick={() => setShowPopup(true)}>Upload Image</button>
+        {showPopup && <FileUploadPopup onClose={() => setShowPopup(false)} />}
+      </div>
 
       {/* Search Bar */}
       <SearchBar onSearch={handleSearch} />
